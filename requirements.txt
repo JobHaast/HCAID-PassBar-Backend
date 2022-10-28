@@ -5,6 +5,5 @@ shap
 pandas
 keras
 scikit-learn
-tensorflow
 flask-cors
 matplotlib
