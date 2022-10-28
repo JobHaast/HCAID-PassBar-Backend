@@ -4,6 +4,7 @@ numpy
 shap
 pandas
 keras
+tensorflow-cpu
 scikit-learn
 flask-cors
 matplotlib
