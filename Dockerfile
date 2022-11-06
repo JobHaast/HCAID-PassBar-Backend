@@ -7,6 +7,6 @@ WORKDIR /app
 COPY . .
 
 RUN python -m pip install --upgrade pip
-RUN conda install --file requirements.txt
+RUN pip install -r requirements.txt
 
 CMD ["python", "api.py"]

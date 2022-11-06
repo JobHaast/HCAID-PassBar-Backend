@@ -14,7 +14,7 @@ from flask_cors import CORS
 import matplotlib
 import matplotlib.pyplot as plt
 
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 
 app = Flask(__name__)
 # Solves Cross Origin Resource Sharing (CORS)
@@ -142,6 +142,17 @@ def setup():
 (model, shap_explainer) = setup()
 
 
+@app.route('/', methods=['GET'])
+def root():
+    response = {
+        "author": "Job Haast",
+        "description": "API for PassBar",
+        "made possible by": "Tim van den Enden",
+        "version": "1.0"
+    }
+    return jsonify(response)
+
+
 @app.route('/api/predict', methods=['POST'])
 def predict():
     content = request.json
@@ -171,7 +182,8 @@ def predict():
 
         x[0, 0] = content['decile3']
         x[0, 1] = content['decile1']
-        x[0, 2] = content['lsat'] - 120 # The range of values of the lsat in this dataset do not correspond with real-life data. In this dataset it ranges from 0-60 (educated guess). The range from the real lsat is 120-180 (which comes to 60 inbetween). So to calculate an accurate lsat score for a prediction 120 points must be deducted from provided real-life lsat score.
+        x[0, 2] = content[
+                      'lsat'] - 120  # The range of values of the lsat in this dataset do not correspond with real-life data. In this dataset it ranges from 0-60 (educated guess). The range from the real lsat is 120-180 (which comes to 60 inbetween). So to calculate an accurate lsat score for a prediction 120 points must be deducted from provided real-life lsat score.
         x[0, 3] = content['ugpa']
         x[0, 4] = content['fulltime']
         x[0, 5] = content['grad']
@@ -194,7 +206,7 @@ def predict():
 
         # Encode shap img into base64,
         buf = BytesIO()
-        plt.savefig(buf, format='png', bbox_inches="tight")
+        plt.savefig(buf, format='png', bbox_inches="tight", transparent=True)
         shap_img = base64.b64encode(buf.getvalue()).decode("utf-8").replace("\n", "")
 
         # Request response
@@ -212,4 +224,4 @@ def predict():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5045, debug=False)
